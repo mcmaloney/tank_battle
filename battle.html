@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>TANK BATTLE</title>
     <style type="text/css">
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0 }
@@ -16,6 +17,7 @@
       var marker1;
       var marker2;
       var geodesicPoly;
+      var poly;
       
       // Projectile
       var maxProjectileSpeed = 350; // Meters per second
@@ -50,6 +52,15 @@
         google.maps.event.addListener(marker1, 'position_changed', update);
         google.maps.event.addListener(marker2, 'position_changed', update);
         
+        var polyOptions = {
+          strokeColor: '#000000',
+          strokeOpacity: 1.0,
+          strokeWeight: 3,
+          map: map
+        }
+        
+        poly = new google.maps.Polyline(polyOptions);
+        
         var geodesicOptions = {
           strokeColor: '#FFAAAA',
           strokeOpacity: 1.0,
@@ -66,8 +77,8 @@
       // Update the distance between markers and paths if they are dragged somewhere else.
       function update() {
         var path = [marker1.getPosition(), marker2.getPosition()];
+        poly.setPath(path);
         geodesicPoly.setPath(path);
-        console.log(geodesicPoly);
         var heading = google.maps.geometry.spherical.computeHeading(path[0], path[1]);
       }
       
@@ -99,13 +110,13 @@
         return distance;
       }
       
+      // Outputs the difference between distance to target and projectile distance traveled based on launch vars.
       function fireProjectile() {
         var targetDistance = calculateDistanceBetween(marker1.getPosition(), marker2.getPosition());
+        // Initial velocity is basically "Power" 
         var initialVelocity = parseFloat(document.launchVars.initalVelocity.value);
         var launchAngle = parseFloat(document.launchVars.launchAngle.value);    
         var launchHeight = parseFloat(document.launchVars.launchHeight.value);
-        console.log("Distance to target: "  + targetDistance);
-        console.log("Distance from launch: " + findLaunchResults(initialVelocity, launchAngle, launchHeight));
         var distanceDifference = Math.round(1000.0 * (findLaunchResults(initialVelocity, launchAngle, launchHeight) - targetDistance))/1000.0
         document.launchResults.distance.value = distanceDifference;
       }
@@ -115,13 +126,13 @@
           alert("You must enter appropriate launch values.");
         }
 
-        angle = (Math.PI/180.0)*angle;              // convert to radians
+        angle = (Math.PI/180.0)*angle; // convert to radians
 
-        var Ge = parseFloat(9.81);            // acceleration of gravity -- meters/sec/sec
-        var Vx = velocity*Math.cos(angle);             // init horizontal velocity
-        var Vy = velocity*Math.sin(angle);             // init vertical velocity
+        var Ge = parseFloat(9.81);          // acceleration of gravity -- meters/sec/sec
+        var Vx = velocity*Math.cos(angle);  // init horizontal velocity
+        var Vy = velocity*Math.sin(angle);  // init vertical velocity
 
-        var hgt = height + Vy*Vy/(2*Ge);          // max height
+        var hgt = height + Vy*Vy/(2*Ge); // max height
 
         if (hgt < 0.0) return;
 
@@ -132,7 +143,8 @@
         // flight time to impact, speed at impact
         var imp = upt + dnt;
         var spd = Math.sqrt((Ge*dnt)*(Ge*dnt) + Vx*Vx);
-
+        
+        // Just return the range for now since that's all we really want.
         return rng;
       }
       

@@ -172,7 +172,7 @@
       function getDamageFromDistanceDelta(delta) {
         var maxDamage = 100;
         if (shotLandedInTargetRadius(delta)) {
-          return maxDamage - (delta / 100);
+          return maxDamage - (delta / 10);
         } else {
           return 0;
         }

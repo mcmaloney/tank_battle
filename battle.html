@@ -5,20 +5,24 @@
     <title>TANK BATTLE</title>
     <style type="text/css">
       html { height: 100% }
-      body { height: 100%; margin: 0; padding: 0 }
+      body { 
+        font-family: "Arial";
+        height: 100%; 
+        margin: 0; 
+        padding: 0 
+      }
       #map_canvas { height: 100% }
     </style>
     <script type="text/javascript"
       src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true">
     </script>
     <script type="text/javascript">
-      // Map Vars
+      // Global Vars
       var map;
       var marker1;
       var marker2;
-      var geodesicPoly;
+      var geodesicPoly; // Neither of the polylines would be visible to users. Just using as an example.
       var poly;
-      var targetHeading; // Path heading to second marker
       var userLocation;
       var shotsFired = new Array(); // Tracks shots fired for future use
       var maxDistanceFromTarget = 1000; // Radius to target outside of which projectile is ineffective
@@ -31,6 +35,7 @@
         return this * 180 / Math.PI;
       }
       
+      // Set a destination point based on a heading and a distance from another point
       google.maps.LatLng.prototype.destinationPoint = function(heading, dist) {
          dist = dist / 6371;  
          heading = heading.toRad();  
@@ -116,7 +121,6 @@
         var path = [marker1.getPosition(), marker2.getPosition()];
         poly.setPath(path);
         geodesicPoly.setPath(path);
-        targetHeading = google.maps.geometry.spherical.computeHeading(path[0], path[1]);
       }
       
       // Spherical/geodesic distance
@@ -153,10 +157,6 @@
         var upt = Vy/Ge;                      // time to max height
         var dnt = Math.sqrt(2*hgt/Ge);        // time from max height to impact
         var rng = Vx*(upt + dnt);             // horizontal range at impact
-
-        // flight time to impact, speed at impact
-        var imp = upt + dnt;
-        var spd = Math.sqrt((Ge*dnt)*(Ge*dnt) + Vx*Vx);
         
         // Put a marker where the shot lands
         var shotMarker = new google.maps.Marker({
@@ -192,7 +192,7 @@
   </head>
   <body>
     <div id="map_canvas" style="width:100%; height:100%"></div>
-    <div id="info">
+    <div id="info" style="padding: 10px; background-color: #fff;">
       <form name="launchVars">
         Launch Velocity: <input type="text" name="initialVelocity" value="350" />
         Launch Angle: <input type="text" name="launchAngle" value="45" />

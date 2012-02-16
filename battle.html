@@ -20,7 +20,8 @@
       var poly;
       var targetHeading; // Path heading to second marker
       var userLocation;
-      var shotsFired = new Array();
+      var shotsFired = new Array(); // Tracks shots fired for future use
+      var maxDistanceFromTarget = 1000; // Radius to target outside of which projectile is ineffective
       
       Number.prototype.toRad = function() {
         return this * Math.PI / 180;
@@ -47,6 +48,10 @@
          if (isNaN(lat2) || isNaN(lon2)) return null;
 
          return new google.maps.LatLng(lat2.toDeg(), lon2.toDeg());
+      }
+      
+      Array.prototype.last = function() {
+        return this[this.length - 1];
       }
       
       // Setup map, initial markers, paths.
@@ -135,7 +140,7 @@
           alert("You must enter appropriate launch values.");
         }
 
-        angle = (Math.PI/180.0)*angle; // convert to radians
+        angle = angle.toRad(); // convert to radians
 
         var Ge = parseFloat(9.81);          // acceleration of gravity -- meters/sec/sec
         var Vx = velocity*Math.cos(angle);  // init horizontal velocity
@@ -160,6 +165,26 @@
         });
         
         shotsFired.push(shotMarker.getPosition());
+        console.log("Damage to target: " + getDamageFromDistanceDelta(calculateDistanceBetween(marker2.getPosition(), shotsFired.last())));
+      }
+      
+      // Rudimentary damage function.
+      function getDamageFromDistanceDelta(delta) {
+        var maxDamage = 100;
+        if (shotLandedInTargetRadius(delta)) {
+          return maxDamage - (delta / 100);
+        } else {
+          return 0;
+        }
+      }
+      
+      // Is the shot outside of the effective target radius?
+      function shotLandedInTargetRadius(distanceFromTarget) {
+        if (distanceFromTarget > maxDistanceFromTarget) {
+          return false;
+        } else {
+          return true;
+        }
       }
       
       google.maps.event.addDomListener(window, 'load', initialize);

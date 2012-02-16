@@ -2,7 +2,16 @@
 
 - Actual trajectory calculation
   - Input launch angle and power (multiplier for max velocity, max power is max velocity * 1.0)
+  
+- Place marker where projectile lands after launch
+  - Add launch horizontal angle
+  - Place marker at geolocation of distance traveled at launch heading (horizontal angle)
+
+- Damage function
+  - Projectile has fixed damage amount
+  - Damage to target is a function of impact proximity to target
+    - Damage multiplier outside a certain radius to target is zero
+    - Inside radius the multiplier increases from 0.0 to 1.0 
 
 - Scale factor for distances
-  - Need to be able to apply force setting (proportionally) to any distance 
-  - NYC => Berlin is just proportionally larger than NYC => New Fairfield, but the mechanics are the same
+  - Max power should have upper bounds set based on distance to target

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map_canvas { height: 100% }
+    </style>
+    <script type="text/javascript"
+      src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true">
+    </script>
+    <script type="text/javascript">
+      // Map Vars
+      var currentLocation = new Array();
+      var marker1;
+      var marker2;
+      var geodesicPoly;
+      
+      // Projectile
+      var maxProjectileSpeed = 350; // Meters per second
+      
+      // Setup map, initial markers, paths.
+      function initialize() {
+        getCurrentLocation();
+        var myOptions = {
+          center: new google.maps.LatLng(40.71435280, -74.0059731),
+          zoom: 5,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+        var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+        
+        map.controls[google.maps.ControlPosition.TOP].push(document.getElementById("info"));
+        
+        marker1 = new google.maps.Marker({
+          map: map,
+          draggable: false,
+          position: new google.maps.LatLng(40.71435280, -74.0059731)
+        });
+        
+        marker2 = new google.maps.Marker({
+          map: map,
+          draggable: true,
+          position: new google.maps.LatLng(48.8566140, 2.35222190)
+        });
+        
+        var bounds = new google.maps.LatLngBounds(marker1.getPosition(), marker2.getPosition());
+        map.fitBounds(bounds);
+        
+        google.maps.event.addListener(marker1, 'position_changed', update);
+        google.maps.event.addListener(marker2, 'position_changed', update);
+        
+        var geodesicOptions = {
+          strokeColor: '#FFAAAA',
+          strokeOpacity: 1.0,
+          strokeWeight: 3,
+          geodesic: true,
+          map: map
+        }
+        
+        geodesicPoly = new google.maps.Polyline(geodesicOptions);
+        
+        update();
+      }
+      
+      // Update the distance between markers and paths if they are dragged somewhere else.
+      function update() {
+        var path = [marker1.getPosition(), marker2.getPosition()];
+        geodesicPoly.setPath(path);
+        console.log(geodesicPoly);
+        var heading = google.maps.geometry.spherical.computeHeading(path[0], path[1]);
+        calculateDistanceBetween(marker1.getPosition(), marker2.getPosition());
+      }
+      
+      // Find the user's current location. Use it as the lat/lng for the first marker.
+      function getCurrentLocation() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            currentLocation[0] = position.coords.latitude;
+            currentLocation[1] = position.coords.longitude;
+            console.log(currentLocation);
+          });
+        } else {
+          handleNoGeolocation(false);
+        }
+      }
+      
+      // If geolocation for first marker placement fails.
+      function handleNoGeolocation(errorFlag) {
+        if (errorFlag) {
+          alert("Geolocation failed");
+        } else {
+          "Your browser does not support geolocation.";
+        }
+      }
+      
+      // Returns flight time in seconds
+      function calculateFlightTime() {
+        if (document.getElementById("power").value <= 0 || document.getElementById("power").value == "") {
+          alert("Choose a power setting before firing");
+          return;
+        }
+        var power = document.getElementById('power').value;
+        var actualProjectileSpeed = maxProjectileSpeed * power / 100
+        var distance = calculateDistanceBetween(marker1.getPosition(), marker2.getPosition());
+        // distance / actual speed gives time in seconds
+        var flightTimeInSeconds = distance / actualProjectileSpeed;
+        document.getElementById("flightTime").value = flightTimeInSeconds;
+      }
+      
+      // Spherical/geodesic distance
+      function calculateDistanceBetween(origin, destination) {
+        var distance = google.maps.geometry.spherical.computeDistanceBetween(origin, destination) / 100;
+        document.getElementById('distance').value = distance;
+        return distance;
+      }
+      
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="map_canvas" style="width:100%; height:100%"></div>
+    <div id="info">
+      Distance: <input type="text" "readonly" id="distance">
+      Power: <input type="text" id="power"> <input type="submit" value="Fire" onclick="calculateFlightTime()">
+      Flight Time: <input type="text" "readonly" id="flightTime">
+    </div>
+  </body>
+</html>

@@ -120,10 +120,8 @@
         return distance;
       }
       
-      // Outputs the difference between distance to target and projectile distance traveled based on launch vars.
+      // Feeds the form params into trajectory calculator
       function fireProjectile() {
-        var targetDistance = calculateDistanceBetween(marker1.getPosition(), marker2.getPosition());
-        // Initial velocity is basically "Power" 
         var initialVelocity = parseFloat(document.launchVars.initialVelocity.value);
         var launchAngle = parseFloat(document.launchVars.launchAngle.value);    
         var launchHeight = parseFloat(document.launchVars.launchHeight.value);
@@ -131,6 +129,7 @@
         findLaunchResults(initialVelocity, launchAngle, launchHeight, launchHeading);
       }
       
+      // Trajectory calculator outputs map marker where shot lands based on launch variables.
       function findLaunchResults(velocity, angle, height, heading) {
         if ((angle > 90.0)||(angle < 0.0)||(velocity < 0.0)) {
           alert("You must enter appropriate launch values.");

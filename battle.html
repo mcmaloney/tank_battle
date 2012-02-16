@@ -13,18 +13,13 @@
     </script>
     <script type="text/javascript">
       // Map Vars
-      var currentLocation = new Array();
       var marker1;
       var marker2;
       var geodesicPoly;
       var poly;
       
-      // Projectile
-      var maxProjectileSpeed = 350; // Meters per second
-      
       // Setup map, initial markers, paths.
       function initialize() {
-        getCurrentLocation();
         var myOptions = {
           center: new google.maps.LatLng(40.71435280, -74.0059731),
           zoom: 5,
@@ -80,28 +75,6 @@
         poly.setPath(path);
         geodesicPoly.setPath(path);
         var heading = google.maps.geometry.spherical.computeHeading(path[0], path[1]);
-      }
-      
-      // Find the user's current location. Use it as the lat/lng for the first marker.
-      function getCurrentLocation() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            currentLocation[0] = position.coords.latitude;
-            currentLocation[1] = position.coords.longitude;
-            console.log(currentLocation);
-          });
-        } else {
-          handleNoGeolocation(false);
-        }
-      }
-      
-      // If geolocation for first marker placement fails.
-      function handleNoGeolocation(errorFlag) {
-        if (errorFlag) {
-          alert("Geolocation failed");
-        } else {
-          "Your browser does not support geolocation.";
-        }
       }
       
       // Spherical/geodesic distance

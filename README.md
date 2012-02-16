@@ -1,8 +1,5 @@
 ==== TO DO ====
 
-- Actual trajectory calculation
-  - Input launch angle and power (multiplier for max velocity, max power is max velocity * 1.0)
-  
 - Place marker where projectile lands after launch
   - Add launch horizontal angle
   - Place marker at geolocation of distance traveled at launch heading (horizontal angle)

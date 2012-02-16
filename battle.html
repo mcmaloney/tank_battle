@@ -3,16 +3,7 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <title>TANK BATTLE</title>
-    <style type="text/css">
-      html { height: 100% }
-      body { 
-        font-family: "Arial";
-        height: 100%; 
-        margin: 0; 
-        padding: 0 
-      }
-      #map_canvas { height: 100% }
-    </style>
+    <link rel="stylesheet" type="text/css" href="battle.css" />
     <script type="text/javascript"
       src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true">
     </script>
@@ -20,7 +11,7 @@
   </head>
   <body>
     <div id="map_canvas" style="width:100%; height:100%"></div>
-    <div id="info" style="padding: 10px; background-color: #fff;">
+    <div id="info">
       <form name="launchVars">
         Launch Velocity: <input type="text" name="initialVelocity" value="350" />
         Launch Angle: <input type="text" name="launchAngle" value="45" />

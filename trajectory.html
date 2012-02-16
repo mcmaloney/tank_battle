@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Trajectory Calculator</title>
+    <script type="text/javascript">
+      //---------------------------
+      // ballistic trajectory calculator
+      //---------------------------
+
+      function calculate()
+      {
+          document.calc.range.value  = "cannot solve";
+          document.calc.height.value = "";
+          document.calc.time.value   = "";
+          document.calc.speed.value  = "";
+
+          // get init velocity, angle, and height
+          var Vo = parseFloat(document.calc.Vel_o.value);
+          var th = parseFloat(document.calc.Theta.value);    
+          var Yo = parseFloat(document.calc.Hgt_o.value);
+
+          if ((th > 90.0)||(th < 0.0)||(Vo < 0.0)) return;
+
+          th = (Math.PI/180.0)*th;              // convert to radians
+
+          var Ge = parseFloat(9.81);            // acceleration of gravity -- meters/sec/sec
+          var Vx = Vo*Math.cos(th);             // init horizontal velocity
+          var Vy = Vo*Math.sin(th);             // init vertical velocity
+
+          var hgt = Yo + Vy*Vy/(2*Ge);          // max height
+
+          if (hgt < 0.0) return;
+
+          var upt = Vy/Ge;                      // time to max height
+          var dnt = Math.sqrt(2*hgt/Ge);        // time from max height to impact
+          var rng = Vx*(upt + dnt);             // horizontal range at impact
+
+          // flight time to impact, speed at impact
+          var imp = upt + dnt;
+          var spd = Math.sqrt((Ge*dnt)*(Ge*dnt) + Vx*Vx);
+
+
+          document.calc.range.value  = rng;
+          document.calc.height.value = hgt;
+          document.calc.time.value   = imp;
+          document.calc.speed.value  = spd;
+      }
+    </script>
+  </head>
+  <body>
+    <form name="calc">
+      <p>
+        Muzzle Velocity: <input type="text" name="Vel_o" /> (m/s)
+      </p>
+      <p>
+        Launch Angle: <input type="text" name="Theta" /> (degrees => radians)
+      </p>
+      <p>
+        Launch Height: <input type="text" name="Hgt_o" /> (m)
+      </p>
+      
+      <p>
+        <input type="button" onclick="calculate()" value="Calculate Shot" />
+      </p>
+      
+      <p>
+        Distance Traveled: <input type="text" name="range" "readonly" />
+      </p>
+      <p>
+        Max Height: <input type="text" name="height" "readonly" /> 
+      </p>
+      <p>
+        Travel Time: <input type="text" name="time" "readonly" />
+      </p>
+      <p>
+        Impact Speed: <input type="text" name="speed" "readonly" />
+      </p>
+    </form>
+  </body>
+</html>
+

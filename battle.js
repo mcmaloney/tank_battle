@@ -23,6 +23,7 @@ function initialize() {
   map.controls[google.maps.ControlPosition.TOP].push(document.getElementById("info"));
   
   // These variables needs to be set by grabbing the player's current locaton.
+  // This would ideally be done at the beginning of every turn with current location to see if the user has moved
   var userLocation = new google.maps.LatLng(40.71435280, -74.0059731);
   var opponentLocation = new google.maps.LatLng(48.8566140, 2.35222190);
   
@@ -102,8 +103,16 @@ function showResults(damageAmount, location) {
       $("#feedback").fadeIn("slow").delay(1000).fadeOut("slow");
     }
   } else {
-    alert("TARGET DESTROYED");
+    alert("TARGET DESTROYED IN " + shotsFired.length + " TRIES");
+    resetGame();
   }
+}
+
+function resetGame() {
+  // Clear locations
+  // Clear shotsFired
+  // Clear projectiles from field
+  return;
 }
 
 $(document).ready(function() {

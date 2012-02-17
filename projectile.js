@@ -4,6 +4,7 @@ function Projectile(launchVelocity, launchAngle, launchHeight, launchHeading, la
   this.launchHeight = launchHeight;
   this.launchHeading = launchHeading;
   this.launchOrigin = launchOrigin; // google.maps.LatLng
+  this.maxDamage = 100; // This can be variable depending on what kind of weapon is being simulated
   
   // Trajectory calculator outputs map marker where shot lands based on launch variables.
   this.launch = function() {

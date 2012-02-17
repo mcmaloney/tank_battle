@@ -3,8 +3,6 @@
 - Draw circle around target with radius that shows actual target size
   - Scale per distance to target (long distance, bigger effective radius, etc.)
   
-- Add location name attribute and flag that shows name
-  
 - FB Share on target destruction
   - FB login
   - Callback on target destroyed with share modal "I destroyed [target.name] in X tries"
@@ -12,6 +10,8 @@
 - Set player target location with FB
   - authorize, get location from FB
   - get name from FB
+  
+- Stop arbitrary unit shit. Figure out what's meters and what's KM. At least 2 variables are set to different scales.
   
 - Zoom map based on target distance scale
   - Add global variable for distance scale

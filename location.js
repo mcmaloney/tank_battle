@@ -1,5 +1,6 @@
-function Location(geolocation, map, strength, effectiveRadius) {
+function Location(geolocation, locName, map, strength, effectiveRadius) {
   this.geolocation = location;
+  this.locName = locName
   this.map = map;
   this.strength = strength;
   this.effectiveRadius = effectiveRadius; // should scale based on distance between player locations
@@ -7,7 +8,8 @@ function Location(geolocation, map, strength, effectiveRadius) {
   this.marker = new google.maps.Marker({
     map: map,
     draggable: true,
-    position: geolocation
+    position: geolocation,
+    title: locName
   });
   
   var targetCircle = new google.maps.Circle({
@@ -21,26 +23,6 @@ function Location(geolocation, map, strength, effectiveRadius) {
     radius: effectiveRadius * 100 // need to figure out units here so this is accurate
   });
   
-  // Is the shot outside of the effective target radius?
-  this.shotLandedInTargetRadius = function(distanceFromTarget) {
-    if (distanceFromTarget > this.effectiveRadius) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-  
-  // Rudimentary damage function - depletes location strength but returns the amount of damage caused by a shot 
-  // landing somewhere near it.
-  this.getDamageFromDistanceDelta = function(delta) {
-    if (this.shotLandedInTargetRadius(delta)) {
-      this.strength = this.strength - (delta / 10);
-      return delta / 10;
-    } else {
-      return 0;
-    }
-  }
-  
   // Remaining strength > 0 means you're still alive and kicking
   this.stillAlive = function() {
     if (this.strength > 0) {
@@ -49,9 +31,17 @@ function Location(geolocation, map, strength, effectiveRadius) {
       return false;
     }
   }
-    
-  this.getDamageFromShot = function(shotPosition) {
-    var shotDamage = this.getDamageFromDistanceDelta(google.maps.geometry.spherical.computeDistanceBetween(this.marker.getPosition(), shotPosition) / 100);
-    return Math.round(shotDamage);
+  
+  // Basic damage function. Need to refine. Sets the strength attribute and returns the damage amount.
+  this.getDamageFromShot = function(shotPosition, projectileMaxDamage) {
+    var shotLandingDistance = google.maps.geometry.spherical.computeDistanceBetween(this.marker.getPosition(), shotPosition) / 100;
+    var shotDamage;
+    if (shotLandingDistance > this.effectiveRadius) {
+      shotDamage = 0;
+    } else {
+      var shotDamage = Math.round((projectileMaxDamage / shotLandingDistance) * 100);
+      this.strength = this.strength - shotDamage;
+    }
+    return shotDamage;
   }
 }

@@ -4,7 +4,6 @@ var marker1;
 var marker2;
 var geodesicPoly; // Neither of the polylines would be visible to users. Just using as an example.
 var poly;
-var userLocation;
 var shotsFired = new Array(); // Tracks shots fired for future use
 
 Array.prototype.last = function() {
@@ -23,12 +22,15 @@ function initialize() {
   
   map.controls[google.maps.ControlPosition.TOP].push(document.getElementById("info"));
   
-  // This variable needs to be set by grabbing the player's current locaton.
-  userLocation = new google.maps.LatLng(40.71435280, -74.0059731);
-  opponentLocation = new google.maps.LatLng(48.8566140, 2.35222190)
+  // These variables needs to be set by grabbing the player's current locaton.
+  var userLocation = new google.maps.LatLng(40.71435280, -74.0059731);
+  var opponentLocation = new google.maps.LatLng(48.8566140, 2.35222190);
   
-  marker1 = new Location(userLocation, map, 100, 1000);
-  marker2 = new Location(opponentLocation, map, 100, 1000);
+  // Get effective target radii after setting user locations
+  var effectiveTargetRadius = setEffectiveTargetRadius(userLocation, opponentLocation);
+  
+  marker1 = new Location(userLocation, "Mike", map, 100, effectiveTargetRadius);
+  marker2 = new Location(opponentLocation, "Nadav", map, 100, effectiveTargetRadius);
   
   var bounds = new google.maps.LatLngBounds(marker1.marker.getPosition(), marker2.marker.getPosition());
   map.fitBounds(bounds);
@@ -65,6 +67,12 @@ function update() {
   geodesicPoly.setPath(path);
 }
 
+function setEffectiveTargetRadius(location1, location2) {
+  var distanceBetweenTargets = google.maps.geometry.spherical.computeDistanceBetween(location1, location2) / 100;
+  // Compute effective radius given distance and scale factor (TBD)
+  return 1000;
+}
+
 // Feeds the form params into trajectory calculator
 function fireProjectile() {
   var initialVelocity = parseFloat(document.launchVars.initialVelocity.value);
@@ -73,7 +81,7 @@ function fireProjectile() {
   var launchHeading = parseFloat(document.launchVars.launchHeading.value);
   var projectile = new Projectile(initialVelocity, launchAngle, launchHeight, launchHeading, marker1.marker.getPosition());
   shotsFired.push(projectile.launch());
-  var damage = marker2.getDamageFromShot(shotsFired.last());
+  var damage = marker2.getDamageFromShot(shotsFired.last(), projectile.maxDamage);
   showResults(damage, marker2);
 }
 

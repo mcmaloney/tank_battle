@@ -8,6 +8,9 @@
   - authorize, get location from FB
   - get name from FB
   
+- FB Leaderboard?
+  - Save scores/users, etc.
+  
 - Stop arbitrary unit shit. Figure out what's meters and what's KM. At least 2 variables are set to different scales.
   
 - Zoom map based on target distance scale

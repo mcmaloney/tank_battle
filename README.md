@@ -1,8 +1,5 @@
 ==== TO DO ====
   
-- Draw circle around target with radius that shows actual target size
-  - Scale per distance to target (long distance, bigger effective radius, etc.)
-  
 - FB Share on target destruction
   - FB login
   - Callback on target destroyed with share modal "I destroyed [target.name] in X tries"

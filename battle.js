@@ -67,13 +67,17 @@ function update() {
   geodesicPoly.setPath(path);
 }
 
+// Set the effective radius of targets proportional to the distance between them
 function setEffectiveTargetRadius(location1, location2) {
   var distanceBetweenTargets = google.maps.geometry.spherical.computeDistanceBetween(location1, location2) / 100;
-  // Compute effective radius given distance and scale factor (TBD)
-  return 1000;
+  var radius = Math.round(distanceBetweenTargets * 0.02); // Abritrary scale factor could be changed based on difficulty settings.
+  if (radius < 1) {
+    radius = 1;
+  }
+  return radius;
 }
 
-// Feeds the form params into trajectory calculator
+// Feeds the fire control params into trajectory calculator
 function fireProjectile() {
   var initialVelocity = parseFloat(document.launchVars.initialVelocity.value);
   var launchAngle = parseFloat(document.launchVars.launchAngle.value);    

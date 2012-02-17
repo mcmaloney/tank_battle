@@ -4,8 +4,8 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
     <title>TANK BATTLE</title>
     <link rel="stylesheet" type="text/css" href="battle.css" />
-    <script type="text/javascript"
-      src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true">
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true">
     </script>
     <script type="text/javascript" src="battle.js"></script>
   </head>
@@ -19,6 +19,8 @@
         Launch Heading: <input type="text" name="launchHeading" value="90" />
         <input type="button" value="Fire" onclick="fireProjectile()">
       </form>
+      <div id="feedback">
+      </div>
     </div>
   </body>
 </html>

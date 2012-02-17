@@ -146,7 +146,21 @@ function findLaunchResults(velocity, angle, height, heading) {
   });
   
   shotsFired.push(shotMarker.getPosition());
-  console.log("Damage to target: " + getDamageFromDistanceDelta(calculateDistanceBetween(marker2.getPosition(), shotsFired.last())));
+  showResults(getDamageFromDistanceDelta(calculateDistanceBetween(marker2.getPosition(), shotsFired.last())));
+}
+
+// Display the results of a shot fired
+function showResults(damageAmount) {
+  damageAmount = Math.round(damageAmount);
+  if (damageAmount == 0) {
+    $("#feedback").css({'background-color': 'gray'});
+    $("#feedback").html("MISS")
+    $("#feedback").fadeIn("slow").delay(1000).fadeOut("slow");
+  } else {
+    $("#feedback").css({'background-color': 'red'});
+    $("#feedback").html("HIT! " + damageAmount + " DAMAGE");
+    $("#feedback").fadeIn("slow").delay(1000).fadeOut("slow");
+  }
 }
 
 // Rudimentary damage function.
@@ -155,6 +169,7 @@ function getDamageFromDistanceDelta(delta) {
   if (shotLandedInTargetRadius(delta)) {
     return maxDamage - (delta / 10);
   } else {
+    $("#feedback").fadeIn("slow");
     return 0;
   }
 }
@@ -168,4 +183,6 @@ function shotLandedInTargetRadius(distanceFromTarget) {
   }
 }
 
-google.maps.event.addDomListener(window, 'load', initialize);
+$(document).ready(function() {
+  initialize();
+});

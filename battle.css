@@ -17,3 +17,12 @@ body {
   padding: 10px; 
   background-color: #fff;
 }
+
+#feedback {
+  font-weight: bold;
+  color: white;
+  width: 100px;
+  padding: 5px;
+  margin: 10px auto;
+  display: none;
+}

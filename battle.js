@@ -73,12 +73,14 @@ function fireProjectile() {
   var launchHeading = parseFloat(document.launchVars.launchHeading.value);
   var projectile = new Projectile(initialVelocity, launchAngle, launchHeight, launchHeading, marker1.marker.getPosition());
   shotsFired.push(projectile.launch());
-  console.log(marker2.getDamageFromShot(shotsFired.last()));
+  var damage = marker2.getDamageFromShot(shotsFired.last());
+  console.log(marker2.strength);
+  showResults(damage, marker2);
 }
 
 // Display the results of a shot fired
-function showResults(damageAmount, target) {
-  if (target.stillAlive()) {
+function showResults(damageAmount, location) {
+  if (location.stillAlive()) {
     if (damageAmount == 0) {
       $("#feedback").css({'background-color': 'gray'});
       $("#feedback").html("MISS")

@@ -19,10 +19,12 @@ function Location(geolocation, map, strength, effectiveRadius) {
     }
   }
   
-  // Rudimentary damage function.
+  // Rudimentary damage function - depletes location strength but returns the amount of damage caused by a shot 
+  // landing somewhere near it.
   this.getDamageFromDistanceDelta = function(delta) {
     if (this.shotLandedInTargetRadius(delta)) {
-      return this.strength - (delta / 10);
+      this.strength = this.strength - (delta / 10);
+      return delta / 10;
     } else {
       return 0;
     }

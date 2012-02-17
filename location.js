@@ -2,12 +2,23 @@ function Location(geolocation, map, strength, effectiveRadius) {
   this.geolocation = location;
   this.map = map;
   this.strength = strength;
-  this.effectiveRadius = effectiveRadius;
+  this.effectiveRadius = effectiveRadius; // should scale based on distance between player locations
   
   this.marker = new google.maps.Marker({
     map: map,
     draggable: true,
     position: geolocation
+  });
+  
+  var targetCircle = new google.maps.Circle({
+    strokeColor: "#FF0000",
+    strokeOpacity: 0.5,
+    strokeWeight: 1,
+    fillColor: "#FF0000",
+    fillOpacity: 0.35,
+    map: map,
+    center: geolocation,
+    radius: effectiveRadius * 100 // need to figure out units here so this is accurate
   });
   
   // Is the shot outside of the effective target radius?
@@ -44,12 +55,3 @@ function Location(geolocation, map, strength, effectiveRadius) {
     return Math.round(shotDamage);
   }
 }
-
-
-
-function getShotDamage(shot, target) {
-  console.log(calculateDistanceBetween(target, shot));
-  marker2.strength = marker2.strength - damageFromShot;
-  showResults(damageFromShot, marker2);
-}
-

@@ -74,7 +74,6 @@ function fireProjectile() {
   var projectile = new Projectile(initialVelocity, launchAngle, launchHeight, launchHeading, marker1.marker.getPosition());
   shotsFired.push(projectile.launch());
   var damage = marker2.getDamageFromShot(shotsFired.last());
-  console.log(marker2.strength);
   showResults(damage, marker2);
 }
 

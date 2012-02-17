@@ -1,13 +1,17 @@
 ==== TO DO ====
-
-- Marker1 should be current location, not draggable
-
-- Add a damage feedback
-  - Red text fades in if there's damage, displays value
-  - "MISS" if there's no damage
   
 - Draw circle around target with radius that shows actual target size
   - Scale per distance to target (long distance, bigger effective radius, etc.)
+  
+- Add location name attribute and flag that shows name
+  
+- FB Share on target destruction
+  - FB login
+  - Callback on target destroyed with share modal "I destroyed [target.name] in X tries"
+  
+- Set player target location with FB
+  - authorize, get location from FB
+  - get name from FB
   
 - Zoom map based on target distance scale
   - Add global variable for distance scale

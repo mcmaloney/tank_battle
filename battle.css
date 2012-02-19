@@ -10,7 +10,9 @@ body {
 }
 
 #map_canvas { 
-  height: 100%; 
+  margin: 0px auto;
+  height: 90%; 
+  width: 90%;
 }
 
 #info {

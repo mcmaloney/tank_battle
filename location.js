@@ -7,7 +7,7 @@ function Location(geolocation, locName, map, strength, effectiveRadius) {
   
   this.marker = new google.maps.Marker({
     map: map,
-    draggable: true,
+    draggable: false,
     position: geolocation,
     title: locName
   });
@@ -39,7 +39,7 @@ function Location(geolocation, locName, map, strength, effectiveRadius) {
     if (shotLandingDistance > this.effectiveRadius) {
       shotDamage = 0;
     } else {
-      var shotDamage = Math.round((projectileMaxDamage / shotLandingDistance) * 100);
+      shotDamage = Math.round((projectileMaxDamage / shotLandingDistance) * 100);
       this.strength = this.strength - shotDamage;
     }
     return shotDamage;

@@ -5,6 +5,7 @@ var marker2;
 var geodesicPoly; // Neither of the polylines would be visible to users. Just using as an example.
 var poly;
 var shotsFired = new Array(); // Tracks shots fired for future use
+var players = new Array(); // All of the players (Location objects)
 
 Array.prototype.last = function() {
   return this[this.length - 1];
@@ -30,43 +31,10 @@ function initialize() {
   // Get effective target radii after setting user locations
   var effectiveTargetRadius = setEffectiveTargetRadius(userLocation, opponentLocation);
   
-  marker1 = new Location(userLocation, "Mike", map, 100, effectiveTargetRadius);
-  marker2 = new Location(opponentLocation, "Nadav", map, 100, effectiveTargetRadius);
-  
-  var bounds = new google.maps.LatLngBounds(marker1.marker.getPosition(), marker2.marker.getPosition());
-  map.fitBounds(bounds);
-  
-  google.maps.event.addListener(marker1.marker, 'position_changed', update);
-  google.maps.event.addListener(marker2.marker, 'position_changed', update);
-  
-  var polyOptions = {
-    strokeColor: '#000000',
-    strokeOpacity: 1.0,
-    strokeWeight: 3,
-    map: map
-  }
-  
-  poly = new google.maps.Polyline(polyOptions);
-  
-  var geodesicOptions = {
-    strokeColor: '#FFAAAA',
-    strokeOpacity: 1.0,
-    strokeWeight: 3,
-    geodesic: true,
-    map: map
-  }
-  
-  geodesicPoly = new google.maps.Polyline(geodesicOptions);
-  
-  update();
+  players.push(new Location(userLocation, "Mike", map, 100, effectiveTargetRadius));
+  players.push(new Location(opponentLocation, "Nadav", map, 100, effectiveTargetRadius));
 }
-
-// Update the distance between markers and paths if they are dragged somewhere else.
-function update() {
-  var path = [marker1.marker.getPosition(), marker2.marker.getPosition()];
-  poly.setPath(path);
-  geodesicPoly.setPath(path);
-}
+  
 
 // Set the effective radius of targets proportional to the distance between them
 function setEffectiveTargetRadius(location1, location2) {
@@ -84,10 +52,10 @@ function fireProjectile() {
   var launchAngle = parseFloat(document.launchVars.launchAngle.value);    
   var launchHeight = parseFloat(document.launchVars.launchHeight.value);
   var launchHeading = parseFloat(document.launchVars.launchHeading.value);
-  var projectile = new Projectile(initialVelocity, launchAngle, launchHeight, launchHeading, marker1.marker.getPosition());
+  var projectile = new Projectile(initialVelocity, launchAngle, launchHeight, launchHeading, players[0].marker.getPosition());
   shotsFired.push(projectile.launch());
-  var damage = marker2.getDamageFromShot(shotsFired.last(), projectile.maxDamage);
-  showResults(damage, marker2);
+  var damage = players[1].getDamageFromShot(shotsFired.last(), projectile.maxDamage);
+  showResults(damage, players[1]);
 }
 
 // Display the results of a shot fired

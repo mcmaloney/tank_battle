@@ -3,7 +3,11 @@ function Location(geolocation, locName, map, strength, effectiveRadius) {
   this.locName = locName
   this.map = map;
   this.strength = strength;
-  this.effectiveRadius = effectiveRadius; // should scale based on distance between player locations
+  if (!effectiveRadius) {
+    this.effectiveRadius = 100;
+  } else {
+    this.effectiveRadius = effectiveRadius; 
+  }
   
   this.marker = new google.maps.Marker({
     map: map,

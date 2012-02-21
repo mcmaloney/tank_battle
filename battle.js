@@ -23,16 +23,47 @@ function initialize() {
   
   map.controls[google.maps.ControlPosition.TOP].push(document.getElementById("info"));
   
-  // These variables needs to be set by grabbing the player's current locaton.
-  // This would ideally be done at the beginning of every turn with current location to see if the user has moved
-  var userLocation = new google.maps.LatLng(40.71435280, -74.0059731);
   var opponentLocation = new google.maps.LatLng(48.8566140, 2.35222190);
-  
-  // Get effective target radii after setting user locations
-  var effectiveTargetRadius = setEffectiveTargetRadius(userLocation, opponentLocation);
-  
-  players.push(new Location(userLocation, "Mike", map, 100, effectiveTargetRadius));
-  players.push(new Location(opponentLocation, "Nadav", map, 100, effectiveTargetRadius));
+  players.push(new Location(opponentLocation, "Nadav", map, 100));
+}
+
+function joinGame() {
+  var myLocationCoords = getCurrentLocation();
+  console.log(myLocationCoords);
+  var myLocation = new google.maps.LatLng(myLocationCoords[0], myLocationCoords[1]);
+  // get my personal info from fb
+  // var userLocation = new google.maps.LatLng(40.71435280, -74.0059731); get lat lng from current location somehow and put in LatLng object
+  // create my location object with that info
+  // push my location object into players array
+  players.push(new Location(myLocation, "ME", map, 100));
+}
+
+function getCurrentLocation() {
+  var currentLocation = new Array();
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(function(position) {
+      currentLocation[0] = position.coords.latitude;
+      currentLocation[1] = position.coords.longitude;
+    });
+    return currentLocation;
+  } else {
+    alert("Geolocation isn't available");
+  }
+}
+
+// There is probably a better way to do the get/show info thing with FB API.
+function getMyInfo() {
+  // Should check if user is logged in before doing this
+  FB.api(
+    '/me',
+    function(response) {
+      showMyInfo(response);
+    }
+  );
+}
+
+function showMyInfo(info) {
+  return info;
 }
   
 

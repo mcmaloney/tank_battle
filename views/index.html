@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <title>TANK BATTLE</title>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/battle.css" />
+    <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.7.min.js"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=geometry&sensor=true"></script>
+    <script type="text/javascript" src="/javascripts/battle.js"></script>
+    <script type="text/javascript" src="/javascripts/player.js"></script>
+    <script type="text/javascript" src="/javascripts/projectile.js"></script>
+  </head>
+  <body>
+    <div id="fb-root"></div>
+    
+    <script>
+        window.fbAsyncInit = function() {
+          FB.init({
+            appId      : '157450254374339', // App ID
+            status     : true, // check login status
+            cookie     : true,
+            xfbml      : true,
+            oauth      : true
+          });
+        };
+
+        // Load the SDK Asynchronously
+        (function(d){
+          var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+          js = d.createElement('script'); js.id = id; js.async = true;
+          js.src = "//connect.facebook.net/en_US/all.js";
+          d.getElementsByTagName('head')[0].appendChild(js);
+        }(document));
+      </script>
+
+    <div id="map_canvas"></div>
+    <div id="info">
+      <form name="launchVars">
+        Launch Velocity: <input type="text" name="initialVelocity" value="253" />
+        Launch Angle: <input type="text" name="launchAngle" value="45" />
+        Launch Height: <input type="text" name="launchHeight" value="0" />
+        Launch Heading: <input type="text" name="launchHeading" value="53" />
+        <input type="button" value="Fire" onclick="fireProjectile()">
+      </form>
+      <div id="feedback">
+      </div>
+    </div>
+    <div id="user_controls" style="background-color: gray; margin: 10px auto; width: 90%; padding: 5px;">
+      <div class="fb-login-button" data-show-faces="false" data-width="200" data-max-rows="1" data-scope="publish_actions"></div>
+      <input type="button" class="joinButton" value="Join Game" onclick="joinGame()" />
+      <input type="button" value="Invite Friends" onclick="inviteFriends()" />
+    </div>
+  </body>
+</html>

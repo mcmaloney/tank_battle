@@ -6,6 +6,7 @@ var geodesicPoly; // Neither of the polylines would be visible to users. Just us
 var poly;
 var shotsFired = new Array(); // Tracks shots fired for future use
 var players = new Array(); // All of the players (Location objects)
+var markers = new Array();
 
 Array.prototype.last = function() {
   return this[this.length - 1];
@@ -23,34 +24,69 @@ function initialize() {
   
   map.controls[google.maps.ControlPosition.TOP].push(document.getElementById("info"));
   
-  // Put in an imaginary opponent
-  var opponentLocation = new google.maps.LatLng(48.8566140, 2.35222190);
-  players.push(new Player(opponentLocation, "Nadav", map, 100));
+  load_players();  
 }
 
-function joinGame() {
-  var userName;
-  // WTF is wrong with this get current location shit?????
-  var myLocation = new google.maps.LatLng(40.714269, -74.005972);
-  FB.api('/me', function(user) {
-    if (user) {
-      userName = user.name;
+function load_players() {
+  $.ajax({
+    type: "GET",
+    url: "http://localhost:3000/players",
+    success: function(data) {
+      for (var i=0; i<data.length; i++) {
+        add_player_to_map(data[i].fb_id);
+      }
+    }, error: function(a,b,c) {
+      cosnole.log(a + " " + b + " " + c);
     }
   });
-  var player = new Player(myLocation, "Michael", map, 100)
-  players.push(player);
-  savePlayer(player);
-  $('.joinButton').hide('slow');
 }
 
-function savePlayer(player) {
-  console.log("POST");
-  $.post('/players', {
-    player_name: player.playerName,
-    player_latitude: 40.714269,
-    player_longitude: -74.005972,
-    strength: player.strength
+// See if a player exists
+function lookup_player(fb_id) {
+  var player_found = true;
+  
+  $.ajax({
+    type: "GET",
+    url: "http://localhost:3000/players/" + fb_id,
+    success: function(data) {
+      console.log(data);
+    }, error: function(a, b, c) {
+      console.log(a + " " + b + " " + c);
+    }
   });
+  
+  return player_found;
+}
+
+// Update a player's info
+function update_player_with_fb_id(fb_id) {
+  $.ajax({
+    type: "POST",
+    url: "http://localhost:3000/players/" + fb_id,
+    data: {latitude: "40.714269", longitude: "-74.005972"}, // Need to get current location dynamically?
+    success: function(data) {
+      console.log(data);
+    }, error: function(a,b,c) {
+      console.log(a + " " + b + " " + c);
+    }
+  });
+}
+
+// Add any player to the map by querying db with fb_id
+function add_player_to_map(fb_id) {
+  $.ajax({
+    type: "GET",
+    url: "http://localhost:3000/players/" + fb_id,
+    success: function(data) {
+      var playerLoc = new google.maps.LatLng(data.latitude, data.longitude);
+      players.push(new Player(playerLoc, data.name, map, data.strength));
+    }
+  });
+}
+
+// Called from Player model when marker is created. BAD.
+function setAsTarget(marker) {
+  console.log(marker);
 }
 
 function getCurrentLocation() {
@@ -75,7 +111,6 @@ function inviteFriends() {
     // callback something here.
   });
 }
-  
 
 // Set the effective radius of targets proportional to the distance between them
 function setEffectiveTargetRadius(location1, location2) {

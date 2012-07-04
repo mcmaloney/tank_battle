@@ -16,6 +16,10 @@ function Player(geolocation, playerName, map, strength, effectiveRadius) {
     title: playerName
   });
   
+  google.maps.event.addListener(this.marker, 'click', function(e) {
+    setAsTarget(this);
+  });
+  
   var targetCircle = new google.maps.Circle({
     strokeColor: "#FF0000",
     strokeOpacity: 0.5,
